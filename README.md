@@ -35,4 +35,4 @@ Check all files:
     prepycheck
 
 Coded with love by:
-[Steven Brand](https://github.com/kajoomba99)  & [Nicolás Álvarez]([https://github.com/NICOLASTOBON](https://github.com/NICOLASTOBON))  & [Laura Villan]([https://github.com/laucavv](https://github.com/laucavv)) & [David Orejuela]([https://github.com/daorejuela1](https://github.com/daorejuela1))
+[Steven Brand](https://github.com/kajoomba99)  & [Nicolás Álvarez](https://github.com/NICOLASTOBON)  & [Laura Villan](https://github.com/laucavv) & [David Orejuela](https://github.com/daorejuela1)
