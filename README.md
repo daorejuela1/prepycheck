@@ -1,6 +1,8 @@
 # Prepycheck - Bash script to check basics on python task
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
+![Example use case](resources/screentogif.gif)
+
 #  Installation
 
 On Ubuntu run the following command:
