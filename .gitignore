@@ -1,0 +1,7 @@
+*
+!*.sh
+!*.md
+!resources/
+!*.gif
+!*.img
+!.gitignore
