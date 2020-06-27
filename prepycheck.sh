@@ -64,7 +64,7 @@ function class_doc {
   my_classes=$(grep "^class " "$1"| cut -d " " -f2 | cut -d "(" -f1)
   for class in $my_classes; do
 	class_check="$(python3 -c "print(__import__('$2').$class.__doc__)")"
-  if [[ ${#class_check} -gt 0 ]]
+  if [[ ${#class_check} -gt 0 && $class_check != "None" ]]
   then
 	echo -n "$class "; checker_print "OK"
   else
@@ -82,11 +82,11 @@ function function_doc {
 	for func in $my_data; do
 	  my_dato=$(echo "$func" | cut -d "'" -f2)
 	  docperclass="$(python3 -c "print(__import__('$2').$class.$my_dato.__doc__)")"
-	  if [[ ${#docperclass} -gt 0 ]]
+	  if [[ ${#docperclass} -gt 0 && $docperclass != "None" ]]
 	  then
 		echo -n "$my_dato "; checker_print "OK"
 	  else
-		echo -n "$my_dato"; checker_print "BAD"
+		echo -n "$my_dato "; checker_print "BAD"
 	  fi
 	done
   done
@@ -97,11 +97,11 @@ function function_doc {
   for data in $outside_func; do
 	my_dato=$(echo "$data" | cut -d "'" -f2)
 	docpermodule="$(python3 -c "print(__import__('$2').$my_dato.__doc__)")"
-	if [[ ${#docpermodule} -gt 0 ]]
+	if [[ ${#docpermodule} -gt 0 && $docpermodule != "None" ]]
 	then
 	  echo -n "$my_dato "; checker_print "OK"
 	else
-	  echo -n "$my_dato"; checker_print "BAD"
+	  echo -n "$my_dato "; checker_print "BAD"
 	fi
 
   done
