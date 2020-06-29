@@ -33,7 +33,9 @@ function check_shebang {
 
 function general_doctest {
   echo "${bold}[[DOCUMENTATION TEST]]"
-  doc_len="$(python3 -c "print(__import__('$1').__doc__)")"
+  file_doc=$(echo "$1" | rev | cut -d "/" -f1 | rev)
+  path_doc=$(echo "$1" | rev | cut -d "/" -f2- | rev)
+  doc_len="$(python3 -c "import sys; sys.path.append('$path_doc'); print(__import__('$file_doc').__doc__)")"
   if [[ ${#doc_len} -gt 0 && $doc_len != "None" ]]
   then
 	checker_print "OK"
@@ -62,8 +64,10 @@ function funct_pep8 {
 function class_doc {
   echo "${bold}[[CLASS TEST]]"
   my_classes=$(grep "^class " "$1"| cut -d " " -f2 | cut -d "(" -f1)
+  file_doc=$(echo "$2" | rev | cut -d "/" -f1 | rev)
+  path_doc=$(echo "$2" | rev | cut -d "/" -f2- | rev)
   for class in $my_classes; do
-	class_check="$(python3 -c "print(__import__('$2').$class.__doc__)")"
+	class_check="$(python3 -c "import sys; sys.path.append('$path_doc'); print(__import__('$file_doc').$class.__doc__)")"
   if [[ ${#class_check} -gt 0 && $class_check != "None" ]]
   then
 	echo -n "$class "; checker_print "OK"
@@ -76,12 +80,14 @@ function class_doc {
 function function_doc {
   echo "${bold}[[FUNCTION TEST]]"
 
+  file_doc=$(echo "$2" | rev | cut -d "/" -f1 | rev)
+  path_doc=$(echo "$2" | rev | cut -d "/" -f2- | rev)
   for class in $my_classes; do
-	my_data="$(python3 -c "basic=__import__('$2');print(str([ m for m in dir(basic.$class) if not m.startswith('__')])[1:-1])")"
+	my_data="$(python3 -c "import sys; sys.path.append('$path_doc'); basic=__import__('$file_doc'); print(str([ m for m in dir(basic.$class) if not m.startswith('__')])[1:-1])")"
 
 	for func in $my_data; do
 	  my_dato=$(echo "$func" | cut -d "'" -f2)
-	  docperclass="$(python3 -c "print(__import__('$2').$class.$my_dato.__doc__)")"
+	  docperclass="$(python3 -c "import sys; sys.path.append('$path_doc'); print(__import__('$file_doc').$class.$my_dato.__doc__)")"
 	  if [[ ${#docperclass} -gt 0 && $docperclass != "None" ]]
 	  then
 		echo -n "$my_dato "; checker_print "OK"
@@ -91,12 +97,10 @@ function function_doc {
 	done
   done
 
-  outside_func="$(python3 -c "from inspect import getmembers, isfunction;basic=__import__('$2');print(str([o[0] for o in getmembers(basic) if isfunction(o[1])])[1:-1])")"
-
-
+  outside_func=$(grep "^def " "$1"| cut -d " " -f2 | cut -d "(" -f1)
   for data in $outside_func; do
 	my_dato=$(echo "$data" | cut -d "'" -f2)
-	docpermodule="$(python3 -c "print(__import__('$2').$my_dato.__doc__)")"
+	docpermodule="$(python3 -c "import sys; sys.path.append('$path_doc');print(__import__('$file_doc').$my_dato.__doc__)")"
 	if [[ ${#docpermodule} -gt 0 && $docpermodule != "None" ]]
 	then
 	  echo -n "$my_dato "; checker_print "OK"
